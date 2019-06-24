@@ -1,6 +1,7 @@
 // Test a 2pole button
 #define PIN_BUTTON  7
 
+int debug = false;
 int button_pressed = false;
 
 void setup() {
@@ -16,10 +17,13 @@ void loop() {
   }
   while(! button_pressed) {
     int p = digitalRead(PIN_BUTTON);
+    if (debug) {
+      Serial.println(p);
+    }
     if (p == 0) {
       button_pressed = true;
       Serial.println("The button has been pressed!");
-    }
+    } 
   }
 
   delay(1000);

@@ -1,6 +1,6 @@
 /*	-*- c++ -*-
 
-  File: control.ino
+  File: servos.ino
   
   This sketch reads <x, y> inputs from a Joystick and translates them
   into pan-tilt motion on the corresponding camera.  Currently the

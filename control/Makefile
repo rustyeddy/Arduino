@@ -16,7 +16,7 @@ ARDUINO_DIR       = /usr/local/arduino-1.8.9
 
 ### Path to where the your project's libraries are stored.
 USER_LIB_PATH	:=  /home/rusty/Arduino/libraries
-# ARDUINO_LIBS	= Servo
+ARDUINO_LIBS	= Servo
 
 ### Do not touch - the path to Arduino.mk, inside the ARDMK_DIR
 include $(ARDMK_DIR)/Arduino.mk

@@ -1,0 +1,33 @@
+#######################################
+# Syntax Coloring Map For Relay Library
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Relay	KEYWORD1
+RelayPosition KEYWORD1
+RelayState KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+Relay	KEYWORD2
+getRelayState	KEYWORD2
+setRelayState	KEYWORD2
+setRelayPosition	KEYWORD2
+getRelayPosition	KEYWORD2
+setDutyCyclePercent	KEYWORD2
+loop	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+relayStateIdle	LITERAL1
+relayStateRunning	LITERAL1
+relayPositionOpen	LITERAL1
+relayPositionClosed	LITERAL1
+

@@ -17,13 +17,19 @@ void setup(void)
 
 byte x = 0;
 void loop() {
-    using periodic = esp8266::polledTimeout::periodicMs;
-    static periodic nextPing(1000);
+    Wire.requestFrom(I2C_MICRO, 6); // request 6 bytes from slave device #8
 
-    if (nextPing) {
-	Serial.printf("writing x %x\r\n", x);
-	i2c_send_message(x);
-	x++;
+    while (Wire.available()) {
+	int v = Wire.read();
+	if (v == 'J') {
+	    // read the joy stick values
+	    int h = Wire.read();
+	    int v = Wire.read();
+	    int b = Wire.read();
+	}
+	Serial.printf("got joystick values <%x, %x, %d>\n", h, v, b);
+
+	// Add these to the summation stream 
     }
     delay(100);
 }

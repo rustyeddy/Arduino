@@ -51,7 +51,7 @@ void setup() {
 }
 
 void loop() {
-    Wire.write(last_h)
+
     delay(100);
 }
 
@@ -62,9 +62,12 @@ void receiveEvent(int howMany) {
     // loop through all but the last
     while (1 < Wire.available()) {
 
-	char c = Wire.read();	// receive byte as a character
-	Serial.print(c);	// print the character
+	// Write the latest joy stick positions
+	int *v = joy.getpos();
+	Wire.Write('J');
+	Wire.Write(*v++);
+	Wire.Write(*v++);
+	Wire.Write(*v++);
     }
-    int x = Wire.read();	// receive byte as an integer
     Serial.println(x);		// print the integer
 }

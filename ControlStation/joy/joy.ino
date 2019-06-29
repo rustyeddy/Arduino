@@ -37,37 +37,32 @@ public:
 
 Joystick joy(PIN_JOY_H, PIN_JOY_V, PIN_JOY_B);
 
-void requestEvent() {
-    Wire.write()
-}
-
 void setup() {
 
     // Setup I2C for writing
     Wire.begin(I2C_MICRO);	  // join i2c bus
+
     //Wire.onReceive(receiveEvent); // register event
     Wire.onRequest(requestEvent);
     Serial.begin(115200);	  // start serial for output
 }
 
 void loop() {
-
     delay(100);
 }
 
 // function that executes whenever data is received from master
 // this function is registered as an event, see setup()
-void receiveEvent(int howMany) {
+void requestEvent() {
+  
 
     // loop through all but the last
     while (1 < Wire.available()) {
 
 	// Write the latest joy stick positions
 	int *v = joy.getpos();
-	Wire.Write('J');
-	Wire.Write(*v++);
-	Wire.Write(*v++);
-	Wire.Write(*v++);
+	Wire.write("J:", 2);
+	Wire.write(v, 3);
     }
-    Serial.println(x);		// print the integer
+    //Serial.println(x);		// print the integer
 }

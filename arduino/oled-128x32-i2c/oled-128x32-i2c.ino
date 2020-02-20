@@ -22,6 +22,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <Time.h>
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
@@ -52,23 +53,61 @@ static const unsigned char PROGMEM logo_bmp[] =
   B01110000, B01110000,
   B00000000, B00110000 };
 
+static const String[] = {
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec",
+};
+
+float temp = 7.00;
+
+void drawText() {
+    time_t t = now();
+    display.clearDisplay();
+    
+    display.setTextSize(1); // Draw 2X-scale text
+    display.setTextColor(SSD1306_WHITE);
+    display.setCursor(10, 0);
+
+    String mstr = String("Jan");
+    switch (month(t)) {
+    case 1:
+	mstr = "Feb";
+	    
+    }
+
+    String d = String();
+    d.concat("/");
+    d.concat(day(t));
+    display.println(d);
+
+    String tim = String(hour(t));
+    tim.concat(":");
+    tim.concat(minute(t));
+    display.setCursor(90, 0);
+    display.print(tim);
+
+    display.setTextSize(2);
+    display.setCursor(40, 10);
+    display.print(temp);
+    display.display();
+}
+
 void setup() {
-  Serial.begin(9600);
+    Serial.begin(9600);
 
-  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3C for 128x32
-    Serial.println(F("SSD1306 allocation failed"));
-    for(;;); // Don't proceed, loop forever
-  }
+    // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3C for 128x32
+	Serial.println(F("SSD1306 allocation failed"));
+	for(;;); // Don't proceed, loop forever
+    }
 
-  // Show initial display buffer contents on the screen --
-  // the library initializes this with an Adafruit splash screen.
-  display.display();
-  delay(2000); // Pause for 2 seconds
+    // Show initial display buffer contents on the screen --
+    // the library initializes this with an Adafruit splash screen.
+    display.clearDisplay();
+    drawText();
+}
 
-  // Clear the buffer
-  display.clearDisplay();
 
+void setup2() {
   // Draw a single pixel in white
   display.drawPixel(10, 10, SSD1306_WHITE);
 
@@ -117,6 +156,16 @@ void setup() {
 }
 
 void loop() {
+  // read the input on analog pin 0:
+  int sensorValue = analogRead(A1);
+  // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
+  float voltage = sensorValue * (5.0 / 1023.0);
+  // print out the value you read:
+  Serial.println(voltage);
+  temp = voltage * 100;
+
+  drawText();
+  delay(2000);
 }
 
 void testdrawline() {

@@ -53,7 +53,7 @@ static const unsigned char PROGMEM logo_bmp[] =
   B01110000, B01110000,
   B00000000, B00110000 };
 
-static const String[] = {
+static String months[] = {
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec",
 };
 
@@ -67,16 +67,9 @@ void drawText() {
     display.setTextColor(SSD1306_WHITE);
     display.setCursor(10, 0);
 
-    String mstr = String("Jan");
-    switch (month(t)) {
-    case 1:
-	mstr = "Feb";
-	    
-    }
-
-    String d = String();
+    String d = months[month(t)];
     d.concat("/");
-    d.concat(day(t));
+    d.concat(String(day(t)));
     display.println(d);
 
     String tim = String(hour(t));
@@ -86,7 +79,7 @@ void drawText() {
     display.print(tim);
 
     display.setTextSize(2);
-    display.setCursor(40, 10);
+    display.setCursor(30, 15);
     display.print(temp);
     display.display();
 }

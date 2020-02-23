@@ -57,35 +57,14 @@ static String months[] = {
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec",
 };
 
+int redPin = 9;
+int brightness = 0;
 float temp = 7.00;
 
-void drawText() {
-    time_t t = now();
-    display.clearDisplay();
-    
-    display.setTextSize(1); // Draw 2X-scale text
-    display.setTextColor(SSD1306_WHITE);
-    display.setCursor(10, 0);
-
-    String d = months[month(t)];
-    d.concat("/");
-    d.concat(String(day(t)));
-    display.println(d);
-
-    String tim = String(hour(t));
-    tim.concat(":");
-    tim.concat(minute(t));
-    display.setCursor(90, 0);
-    display.print(tim);
-
-    display.setTextSize(2);
-    display.setCursor(30, 15);
-    display.print(temp);
-    display.display();
-}
 
 void setup() {
     Serial.begin(9600);
+    pinMode(9, OUTPUT);
 
     // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
     if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3C for 128x32
@@ -99,6 +78,61 @@ void setup() {
     drawText();
 }
 
+void loop() {
+
+    analogWrite(redPin, brightness);
+    brightness += 10;
+    if (brightness < 0 || brightness > 255) {
+	brightness = 0;
+    }
+
+    temp = get_voltage();
+    drawText();
+    delay(10000);
+}
+
+float get_voltage()
+{
+    int sample_count = 64;
+    float temp = 0.0;
+    
+    // lets loop around and take an average
+    for (int i = 0; i < 64; i++ ) {
+
+	int sensorValue = analogRead(A1);
+
+	// Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 3.3V):
+	float voltage = sensorValue * (5.0 / 1023.0);
+
+	// print out the value you read:
+	Serial.println(voltage);
+	temp += voltage * 100.0;
+    }
+
+    temp /= sample_count;
+    return temp;
+}
+
+void drawText() {
+    String d = String("Feb 20");
+    String t = String("20:20");
+ 
+    display.clearDisplay();
+    
+    display.setTextSize(1); // Draw 2X-scale text
+    display.setTextColor(SSD1306_WHITE);
+
+    display.setCursor(10, 0);
+    display.println(d);
+
+    display.setCursor(90, 0);
+    display.print(t);
+
+    display.setTextSize(2);
+    display.setCursor(35, 15);
+    display.print(temp);
+    display.display();
+}
 
 void setup2() {
   // Draw a single pixel in white
@@ -146,19 +180,6 @@ void setup2() {
   delay(1000);
 
   testanimate(logo_bmp, LOGO_WIDTH, LOGO_HEIGHT); // Animate bitmaps
-}
-
-void loop() {
-  // read the input on analog pin 0:
-  int sensorValue = analogRead(A1);
-  // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
-  float voltage = sensorValue * (5.0 / 1023.0);
-  // print out the value you read:
-  Serial.println(voltage);
-  temp = voltage * 100;
-
-  drawText();
-  delay(2000);
 }
 
 void testdrawline() {

@@ -1,5 +1,15 @@
 #include <M5Stack.h>
 
+int textColor = YELLOW;
+int textSize  = 2;
+int textX = 20;
+int textY = 30;
+int backgroundColor = BLACK;
+const char *message = "Laser Emulator";
+
+int thisButton = 1;
+int lastButton = 0;
+
 void task1(void * pvParameters) {
 
     for(;;) {
@@ -10,18 +20,16 @@ void task1(void * pvParameters) {
 }
 
 void displayTask(void * pvParameters) {
-    Serial.print("Display Task Uptime (ms): ");
-    Serial.println(millis());
-
-    M5.Lcd.fillScreen(BLACK);
-
-    M5.Lcd.setTextColor(YELLOW);
-    M5.Lcd.setCursor(10, 10);
-    M5.Lcd.setTextSize(2);
-    M5.Lcd.printf("Laser Emulator");
-
     for(;;) {
-        delay(500);
+        if (lastButton != thisButton) {
+            M5.Lcd.fillScreen(backgroundColor);
+            M5.Lcd.setTextColor(textColor);
+            M5.Lcd.setCursor(textX, textY);
+            M5.Lcd.setTextSize(textSize);
+            M5.Lcd.printf(message);
+            lastButton = thisButton;
+        }
+        delay(50);
     }
 }
 
@@ -37,7 +45,7 @@ void task3(void * pvParameters) {
 
 void setup() {
 
-    M5.begin();
+    M5.begin(true, false, true);
     M5.Power.begin();
 
     // Task 1
@@ -73,4 +81,26 @@ void setup() {
 
 void loop() {
     M5.update();
+
+    if (M5.BtnA.wasReleased()) {
+        backgroundColor = BLACK;
+        textColor = GREEN;
+        message = "Laser Emulator";
+        thisButton = 1;
+    }
+
+    if (M5.BtnB.wasReleased()) {
+        backgroundColor = WHITE;
+        textColor = BLACK;
+        message = "Rusty Eddy";
+        thisButton = 2;
+    }
+
+    if (M5.BtnC.wasReleased()) {
+        backgroundColor = BLUE;
+        textColor = YELLOW;
+        message = "Super Duper";
+        thisButton = 3;
+    }
+        
 }
